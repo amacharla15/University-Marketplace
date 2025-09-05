@@ -164,3 +164,7 @@ cython_debug/
 #.idea/
 unimarketplace_latest.docker.tgz
 unimarketplace_latest.docker.tgz
+db-client-sa-key.json
+home.pub
+db-client-sa-key.json
+home.pub
