@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+<!-- ↓ in <head> of every template, before your CSS/other scripts ↓ -->
+<!-- 1️⃣ Disable all caching so we never accidentally bfcache an outdated CSRF token -->
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma"        content="no-cache">
+<meta http-equiv="Expires"       content="0">
+
+<!-- 1️⃣b) Render the live CSRF token into the page -->
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<script>
+  // 1a) If this page was restored from bfcache, force a full reload
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+
+  // 1b) Helper to read a cookie by name
+  function getCookie(name) {
+    let value = null;
+    if (document.cookie && document.cookie !== '') {
+      document.cookie.split(';').forEach(c => {
+        const [k, v] = c.trim().split('=');
+        if (k === name) value = decodeURIComponent(v);
+      });
+    }
+    return value;
+  }
+
+  // 1c) Wrap window.fetch so every non-GET automatically sends the X-CSRFToken header
+  (function() {
+    const _fetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+      options.credentials = 'same-origin';
+      options.headers     = options.headers || {};
+      const method = (options.method || 'GET').toUpperCase();
+      if (!['GET','HEAD','OPTIONS','TRACE'].includes(method)) {
+        // pull the live token straight from the cookie
+        options.headers['X-CSRFToken'] = getCookie('csrftoken');
+      }
+      return _fetch(url, options);
+    };
+  })();
+</script>
+<!-- ↑ end of CSRF snippet ↑ -->
+
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="{% static 'app1/css/custom.css' %}">
+</head>
+<body class="container py-4" style="background-color: #fbf3e3ee ">
+  <h2>Log In</h2>
+
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-login">Log In</button>
+  </form>
+
+  <p>Need an account? <a href="{% url 'signup' %}">Sign up here</a>.</p>
+
+<p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

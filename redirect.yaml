@@ -1,0 +1,4 @@
+defaultRouteAction:
+  redirect:
+    httpsRedirect: true
+    stripQuery: false

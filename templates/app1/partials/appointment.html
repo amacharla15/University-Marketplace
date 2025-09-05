@@ -1,0 +1,21 @@
+{# templates/app1/partials/appointment.html #}
+<form
+  method="post"
+  action="{% url 'detail' listing.pk %}?fragment=appointment"
+  class="ajax-form px-2"
+>
+  {% csrf_token %}
+
+  {{ form.scheduled_time.label_tag }}
+
+  <div class="d-flex align-items-start">
+    {{ form.scheduled_time }}
+    <button
+      type="submit"
+      class="btn btn-sm btn-primary"
+      style="margin: -2px 0 0 4px"
+    >
+      Schedule
+    </button>
+  </div>
+</form>

@@ -1,0 +1,191 @@
+/* overall wrapper */
+.theme-switch {
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    position: relative;
+    cursor: pointer;
+    margin-top: 0.15rem;
+  }
+  
+  /* hide native checkbox */
+  .theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* the track */
+  .theme-switch .slider {
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    background-color: #cccccc;
+    border-radius: 13px;
+    transition: background-color 0.3s;
+  }
+  
+  /* the knob (before) */
+  .theme-switch .slider::before {
+    content: "☀️";
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: transform 0.3s, content 0.3s;
+  }
+  
+  /* when checked → dark mode */
+  .theme-switch input:checked + .slider {
+    background-color: #666;
+  }
+  .theme-switch input:checked + .slider::before {
+    transform: translateX(24px);
+    content: "🌙";
+  }
+  
+  /* app1/static/app1/css/custom.css */
+.listing-hero-img {
+  max-height: 250px;     /* or 200px, 300px—whatever you like */
+  max-width: 80%;        /* so it doesn’t fill edge-to-edge */
+  object-fit: cover;     
+  display: block;        /* ensure centering works */
+  margin: 0 auto;     /* crop to fill without distortion */
+}
+
+
+.btn-new-listing {
+  color: #ffc107;              /* yellow text */
+  background-color: #000;      /* black bg */
+  border: 1px solid black;   /* optional yellow border */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-new-listing:hover {
+  background-color: #222;      /* slightly lighter black on hover */
+  color: #fff;                 /* white text on hover for contrast */
+}
+/* “About” button: white on black */
+.btn-about {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #fff;
+  transition: background-color 0.2s;
+}
+.btn-about:hover {
+  background-color: #333;
+}
+
+/* “Wishlist” button: red text on black */
+.btn-wishlist,.favorite-card-btn {
+  background-color: #000;
+  color: #dc3545;
+  border: 1px solid red;
+  transition: background-color 0.2s;
+}
+.btn-wishlist:hover {
+  background-color: #333;
+}
+
+
+
+/* auth form wrapper */
+.auth-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;     /* light grey */
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* centered heading */
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #17a2b8;                /* bootstrap info color */
+  font-weight: 600;
+}
+
+/* make inputs a bit bigger */
+.auth-container .form-control {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+/* full-width primary button */
+.auth-container .btn-primary {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* small link under the form */
+.auth-container .small-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* auth form wrapper */
+.auth-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* centered heading */
+.auth-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #17a2b8;
+  font-weight: 600;
+}
+
+/* small link under the form */
+.auth-container .small-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+/* custom button styles */
+.btn-login,
+.btn-signup {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn-login:hover,
+.btn-signup:hover {
+  background-color: greenyellow;
+}

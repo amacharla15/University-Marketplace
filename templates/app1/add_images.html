@@ -1,0 +1,52 @@
+{# templates/app1/add_images.html #}
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Add Images — {{ listing.title }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+
+      
+    >
+  </head>
+  <body class="container py-4">
+    {% include "app1/_navbar.html" %}
+
+    <h2 class="mb-4">Add more images to “{{ listing.title }}”</h2>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="mb-3">
+        <label for="id_images" class="form-label">Select images</label>
+        <input
+          type="file"
+          name="images"
+          id="id_images"
+          multiple
+          class="form-control"
+        >
+        <small class="form-text text-muted">
+          You can select one or more files.
+        </small>
+      </div>
+
+    <button type="submit" class="btn btn-lg btn-primary">
+      <i class="bi bi-upload"></i> Upload
+    </button>
+      <a href="{% url 'detail' listing.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

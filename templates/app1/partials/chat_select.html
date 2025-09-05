@@ -1,0 +1,13 @@
+{# Show this when there are multiple buyers and no ?buyer=… yet #}
+<div class="list-group">
+  {% for buyer in participants %}
+    <a href="#"
+       class="list-group-item list-group-item-action btn-modal"
+       data-title="Chat with {{ buyer.user.username }}"
+       data-url="{% url 'chat_fragment' listing.pk %}?buyer={{ buyer.pk }}">
+      {{ buyer.user.username }}
+    </a>
+  {% empty %}
+    <p class="text-muted">No one has reached out yet.</p>
+  {% endfor %}
+</div>

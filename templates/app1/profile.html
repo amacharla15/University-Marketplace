@@ -1,0 +1,11 @@
+<h2>Edit Your Profile</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save</button>
+</form>
+
+{% if profile.photo %}
+  <p>Your current photo:</p>
+  <img src="{{ profile.photo.url }}" width="200" alt="Profile photo">
+{% endif %}

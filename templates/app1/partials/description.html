@@ -1,0 +1,25 @@
+{# Bootstrap carousel for all listing.images #}
+<div id="modalCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for img in listing.images.all %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img
+          src="{{ img.image.url }}"
+          class="d-block w-100"
+          style="max-height:400px; object-fit:cover;"
+          alt="Image {{ forloop.counter }}"
+        >
+      </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button"
+          data-bs-target="#modalCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button"
+          data-bs-target="#modalCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<p>{{ listing.description|linebreaksbr }}</p>

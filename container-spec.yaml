@@ -1,0 +1,10 @@
+spec:
+  containers:
+  - name: university-app
+    image: us-west1-docker.pkg.dev/planar-outlook-454509-e8/universitymarketplace/universitymarketplace:latest
+    ports:
+    - containerPort: 80
+    stdin: false
+    tty: false
+  restartPolicy: Always
+

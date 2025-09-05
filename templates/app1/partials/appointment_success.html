@@ -1,0 +1,10 @@
+{# templates/app1/partials/appointment_success.html #}
+<div class="px-2">
+  <div class="alert alert-success d-flex justify-content-between align-items-center">
+    <div>
+      📅 Appointment scheduled for
+      <strong>{{ appt.scheduled_time|date:"F j, Y \\a\\t g:i A" }}</strong>!
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+</div>

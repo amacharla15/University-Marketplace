@@ -1,0 +1,6 @@
+<form method="post" action="{% url 'report_listing' listing.pk %}">
+  {% csrf_token %}
+  {{ form.reason.label_tag }}
+  {{ form.reason }}
+  <button type="submit" class="btn btn-danger mt-2">Submit Report</button>
+</form>

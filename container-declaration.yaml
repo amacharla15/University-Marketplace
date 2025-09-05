@@ -1,0 +1,25 @@
+spec:
+  containers:
+  - name: unimarketplace
+    image: gcr.io/planar-outlook-454509-e8/unimarketplace:latest
+    env:
+      - name: DB_HOST
+        value: "/cloudsql/planar-outlook-454509-e8:us-west1:unimarketplace-pg"
+      - name: DB_NAME
+        value: "unimarketplace"
+      - name: DB_USER
+        value: "postgres"
+      - name: DB_PASSWORD
+        value: "Akshay@1524"
+    volumeMounts:
+      - name: cloudsql
+        mountPath: /cloudsql
+
+  volumes:
+    - name: cloudsql
+      hostPath:
+        path: /mnt/stateful_partition/cloudsql
+        type: DirectoryorCreate
+
+  restartPolicy: Always
+

@@ -1,0 +1,38 @@
+{# templates/app1/partials/reviews.html #}
+
+<div id="reviews-thread" style="max-height:300px; overflow-y:auto;" class="mb-3">
+  {% for rev in reviews %}
+    <div class="border-bottom pb-2 mb-2">
+      <strong>{{ rev.reviewer.user.username }}</strong>
+      <small class="text-muted"> • {{ rev.created|date:"M j, Y, g:i A" }}</small>
+      <div>
+        {# render ★ stars #}
+        {% for i in "12345" %}
+          {% if forloop.counter <= rev.rating %}
+            ★
+          {% else %}
+            ☆
+          {% endif %}
+        {% endfor %}
+      </div>
+      <p class="mb-0">{{ rev.comment|linebreaksbr }}</p>
+    </div>
+  {% empty %}
+    <p class="text-muted">No reviews yet.</p>
+  {% endfor %}
+</div>
+
+<form method="post"
+      action="{% url 'detail' listing.pk %}?fragment=reviews"
+      class="ajax-form">
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.rating.label_tag }}
+    {{ form.rating }}
+  </div>
+  <div class="mb-3">
+    {{ form.comment.label_tag }}
+    {{ form.comment }}
+  </div>
+  <button type="submit" class="btn btn-sm btn-primary">Submit Review</button>
+</form>

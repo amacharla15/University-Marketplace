@@ -1,0 +1,373 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+   
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta charset="utf-8">
+  
+   
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma"        content="no-cache">
+    <meta http-equiv="Expires"       content="0">
+  
+
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script>
+
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          window.location.reload();
+        }
+      });
+  
+
+      function getCookie(name) {
+        let value = null;
+        if (document.cookie && document.cookie !== '') {
+          document.cookie.split(';').forEach(c => {
+            const [k, v] = c.trim().split('=');
+            if (k === name) value = decodeURIComponent(v);
+          });
+        }
+        return value;
+      }
+  
+
+      (function() {
+        const realFetch = window.fetch;
+        window.fetch = function(url, options = {}) {
+          options.credentials = 'same-origin';
+          options.headers     = options.headers || {};
+          const method = (options.method || 'GET').toUpperCase();
+          if (!['GET','HEAD','OPTIONS','TRACE'].includes(method)) {
+
+            options.headers['X-CSRFToken'] = getCookie('csrftoken');
+          }
+          return realFetch(url, options);
+        };
+      })();
+    </script>
+  
+
+
+  
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  
+  <link
+    rel="stylesheet"
+    href="{% static 'app1/css/custom.css' %}?v=2"
+  >
+  <style>
+
+    .btn-modal,
+    .btn-app {
+      position: relative;
+      z-index: 1050;
+    }
+    .favorite-card-btn {
+      z-index: 20;
+    }
+  </style>
+  
+</head>
+<body class="container py-4">
+
+  {% include "app1/_navbar.html" %}
+
+  <h1 class="mb-4">Welcome to University Marketplace</h1>
+
+
+  <form method="get" class="row g-2 mb-4 align-items-center">
+    <div class="col-auto">
+      <input
+        type="text"
+        name="q"
+        class="form-control form-control-sm"
+        placeholder="Search…"
+        value="{{ current_q }}"
+      >
+    </div>
+    <div class="col-auto">
+      <select name="tag" class="form-select form-select-sm">
+        <option value="">All tags</option>
+        {% for t in all_tags %}
+          <option
+            value="{{ t.id }}"
+            {% if t.id|stringformat:"s" == current_tag %}selected{% endif %}
+          >{{ t.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto">
+      <select name="category" class="form-select form-select-sm">
+        <option value="">All categories</option>
+        {% for c in all_cats %}
+          <option value="{{ c.slug }}" {% if c.slug == current_cat %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+    </div>
+  </form>
+
+  {% if request.user.is_authenticated %}
+  <div class="mb-4">
+    <a href="{% url 'recommendations' %}" class="btn btn-success">
+      View my recommendations
+    </a>
+  </div>
+{% endif %}
+
+
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for listing in listings %}
+      <div class="col">
+        <div class="card h-100 position-relative">
+          
+
+          {% if listing.images.all %}
+          <div class="card-img-top position-relative" style="height:180px; overflow:hidden;">
+            <img
+              src="{{ listing.images.all.0.image.url }}"
+              alt="{{ listing.title }}"
+              style="width:100%; height:100%; object-fit:cover;"
+            >
+
+            {# ← our overlay button #}
+            {% if request.user.is_authenticated %}
+              <button
+                class="btn btn-sm btn-outline-danger favorite-card-btn position-absolute top-0 end-0 m-2"
+                data-pk="{{ listing.pk }}"
+                title="{% if listing in request.user.profile.favorites.all %}Remove from wishlist{% else %}Add to wishlist{% endif %}"
+              >
+                {% if listing in request.user.profile.favorites.all %}
+                  ❤️
+                {% else %}
+                  🤍
+                {% endif %}
+              </button>
+            {% endif %}
+          </div>
+        {% endif %}
+
+
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-baseline mb-2">
+              <h5 class="card-title mb-0">{{ listing.title }}</h5>
+              <span class="fw-bold">${{ listing.price }}</span>
+            </div>
+            <small class="text-muted mb-3">
+              Seller: {{ listing.seller.user.username }}
+            </small>
+
+            <div class="mb-3 d-flex flex-wrap gap-1">
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm btn-modal"
+                data-title="Description"
+                data-url="{% url 'detail' listing.pk %}?fragment=description"
+              >Description</button>
+
+              {% if request.user.is_authenticated %}
+                <button
+                  type="button"
+                  class="btn btn-outline-success btn-sm btn-modal"
+                  data-title="Chat"
+                  data-url="{% url 'chat_fragment' listing.pk %}"
+                >Chat</button>
+              {% else %}
+                <button
+                  type="button"
+                  class="btn btn-outline-success btn-sm btn-modal"
+                  data-authenticated="false"
+                  data-login-url="{% url 'login' %}?next={% url 'detail' listing.pk %}"
+                  data-title="Chat"
+                  data-url="{% url 'chat_fragment' listing.pk %}"
+
+                >Chat</button>
+              {% endif %}
+
+              <button
+              type="button"
+              class="btn btn-outline-primary btn-sm btn-modal"
+              data-title="Book Appointment"
+              data-url="{% url 'detail' listing.pk %}?fragment=appointment"
+            >
+              Book Appt
+            </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-info btn-sm btn-modal"
+                data-title="Reviews"
+                data-url="{% url 'detail' listing.pk %}?fragment=reviews"
+              >Reviews</button>
+
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm btn-modal"
+                data-title="Report"
+                data-url="{% url 'detail' listing.pk %}?fragment=report"
+              >Report</button>
+            </div>
+
+            <a href="{% url 'detail' listing.pk %}" class="stretched-link"></a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <p>No listings yet. <a href="{% url 'upload' %}">Be the first to post one!</a></p>
+      </div>
+    {% endfor %}
+  </div>
+
+
+  <div class="modal fade" id="globalModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center py-4">Loading…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+  function getCookie(name) {
+    let value = null;
+    if (document.cookie && document.cookie !== '') {
+      document.cookie.split(';').forEach(c => {
+        const [k, v] = c.trim().split('=');
+        if (k === name) value = decodeURIComponent(v);
+      });
+    }
+    return value;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const modalEl = document.getElementById('globalModal');
+    const bsModal = new bootstrap.Modal(modalEl);
+    const titleEl = modalEl.querySelector('.modal-title');
+    const bodyEl  = modalEl.querySelector('.modal-body');
+
+
+    document.addEventListener('click', async e => {
+      const btn = e.target.closest('.btn-modal');
+      if (!btn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (btn.dataset.authenticated === "false") {
+        return window.location.href = btn.dataset.loginUrl;
+      }
+
+
+      titleEl.textContent = btn.dataset.title;
+      bodyEl.innerHTML     = '<p class="text-center py-4">Loading…</p>';
+
+      try {
+        const res = await fetch(btn.dataset.url, {
+          headers:     { 'X-Requested-With': 'XMLHttpRequest' },
+          credentials: 'same-origin',
+          cache:       'no-store'
+        });
+        if (res.redirected) {
+          return window.location.href = res.url;
+        }
+        bodyEl.innerHTML = await res.text();
+      } catch (err) {
+        console.error("Modal load failed:", err);
+        bodyEl.innerHTML = '<p class="text-danger">Failed to load.</p>';
+      }
+
+      bsModal.show();
+    });
+
+
+    modalEl.addEventListener('submit', async e => {
+      const form = e.target;
+      if (!form.classList.contains('ajax-form')) return;
+
+      e.preventDefault();
+      const url       = form.action;
+      const data      = new FormData(form);
+      const csrftoken = getCookie('csrftoken');
+
+      try {
+        const res = await fetch(url, {
+          method:      'POST',
+          credentials: 'same-origin',
+          headers:     {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken':      csrftoken
+          },
+          body: data,
+          cache: 'no-store'
+        });
+        if (res.status === 403) {
+          return window.location.reload();
+        }
+        bodyEl.innerHTML = await res.text();
+      } catch (err) {
+        console.error("Chat submit failed:", err);
+        bodyEl.innerHTML = '<p class="text-danger">Submission failed.</p>';
+      }
+    });
+
+    modalEl.addEventListener('shown.bs.modal', () => {
+
+      modalEl.querySelectorAll('input[name="csrfmiddlewaretoken"]')
+             .forEach(i => i.value = getCookie('csrftoken'));
+
+      const thread = bodyEl.querySelector('#chat-thread');
+      if (thread) thread.scrollTop = thread.scrollHeight;
+    });
+  });
+</script>
+
+
+<script>
+  document.querySelectorAll('.favorite-card-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.preventDefault();
+      e.stopPropagation();       // ← prevent the card’s link from firing
+      const pk  = btn.dataset.pk;
+      const url = "{% url 'toggle_favorite' 0 %}".replace('/0/', `/${pk}/`);
+      const res = await fetch(url, { method: 'POST' });
+      if (!res.ok) return console.error('Wishlist toggle failed');
+      const data = await res.json();
+      btn.textContent = data.action === 'added' ? '❤️' : '🤍';
+      btn.title       = data.action === 'added'
+                          ? 'Remove from wishlist'
+                          : 'Add to wishlist';
+    });
+  });
+</script>
+
+
+
+</body>
+</html>
