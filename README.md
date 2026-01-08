@@ -1,65 +1,88 @@
-Project Title: University Marketplace
+# University Marketplace
 
-Youtube Demo video link: https://youtu.be/dD_xrF4pGcw?si=RDeg5Il6kOBvUZpV 
+A full-stack marketplace for university students to buy/sell/exchange items within a verified campus community.
 
-Project Description:
-University Marketplace is a full-stack web application built to provide university students
-with a dedicated platform to buy, sell, or exchange goods and services within their academic
-community. Inspired by students using social media stories to sell textbooks, electronics,
-furniture, or sublease apartments, this platform aims to centralize and streamline that
-informal process into a secure and organized online marketplace.
-Students must register and log in using official university email addresses to ensure that
-only verified users can participate. Once authenticated, users can manage their profiles and
-item listings. Each listing includes images, descriptions, prices, and tags for easier discovery
-by others.
-The homepage will display an updated feed of all items, with a search bar and category
-filters to help users find what they need. Users can also favorite listings, contact sellers via
-in-app chat, and schedule appointments to meet on campus for item inspection and pickup.
-After each transaction, users may leave ratings and reviews to build trust in the community
-and improve accountability.
-The platform will be developed using HTML, CSS, JavaScript, Bootstrap, Django, and
-PostgreSQL. It will be containerized with Docker and deployed to Google Cloud Platform
-behind a load balancer with at least two app servers. User-uploaded images will be stored
-using GCP Buckets. The /server_info/ path will show configuration and server environment
-details for debugging purposes.
-Advanced features include a wishlist, real-time notifications, a basic item recommender
-system, and optional dark mode. These additions will improve user experience, encourage
-engagement, and differentiate the platform from basic listing boards.
-The responsive design will ensure accessibility across both mobile and desktop devices.
-University Marketplace empowers students to engage in secure, efficient, and communitydriven exchanges while solving a real problem faced by students in everyday campus life.
+🎥 Demo (YouTube): https://youtu.be/dD_xrF4pGcw?si=RDeg5Il6kOBvUZpV
 
-Feature List: 
-• • University email authentication (Join/Login)
-• • User profile creation
-• • Post, view, and edit item listings
-• • Upload item images
-• • Homepage listing feed
-• • Search and filter by keywords, category, and tags
-• • In-app messaging between users
-• • Book Appointment for offline meetups
-• • Wishlist (save favorite items)
-• • Ratings and reviews for sellers
-• • Notifications for chat, appointments, and updates
-• • Report listing (moderation)
-• • Responsive Bootstrap UI
-• • REST API endpoints
-• • Recommender system for item suggestions
-• • Dark mode toggle
-• • /server_info/ view for server metadata
-• • Dockerized deployment to GCP
-• • PostgreSQL database with 3+ related models
-• • GCP Bucket for storing uploaded images
+---
 
-UI Navigation / Pages:
-• • / → Home page: Feed of listings + search and filters
-• • /signup/ → Join page: Register with university email
-• • /login/ → Login page
-• • /logout/ → Logout page
-• • /about/ → About the platform
-• • /profile/ → User profile: User info + listed items + wishlist
-• • /item/<id>/ → Item detail page: View + chat + appointment
-• • /upload/ → Upload item: Listing form
-• • /messages/ → Chat interface: All messages
-• • /appointments/ → View & manage appointments
-• • /server_info/ → Server info endpoint for diagnostics
-• • /report/<id>/ → Report listing 
+## Overview
+
+University Marketplace is a Django + PostgreSQL web app inspired by how students often use social media stories to sell textbooks, electronics, furniture, or sublease apartments. This project centralizes that informal workflow into a structured platform where users can:
+
+- Register/login (intended for university email-based access control)
+- Create and manage listings (images, price, tags/categories)
+- Browse a feed with search + filters
+- Save favorites (wishlist)
+- Message sellers in-app
+- Schedule on-campus meetups (appointments)
+- Leave ratings/reviews after transactions
+- Report listings for moderation
+
+It is containerized with Docker and designed to be deployable on Google Cloud with multiple app servers behind a load balancer. User-uploaded images are designed to be stored in GCP Storage Buckets, and `/server_info/` exposes runtime/server metadata for debugging.
+
+---
+
+## Tech Stack
+
+- **Backend:** Python, Django
+- **Database:** PostgreSQL
+- **Frontend:** HTML, CSS, JavaScript, Bootstrap (templates)
+- **Infra/DevOps:** Docker, deployment manifests/scripts for GCP, load-balancer-oriented setup
+- **Diagnostics:** `/server_info/` endpoint for environment/config visibility
+
+---
+
+## Key Features
+
+### Listings + Discovery
+- Create/edit listings with images, descriptions, price, tags
+- Home feed of listings
+- Search + filters (keywords/category/tags)
+
+### Trust + Workflow
+- Verified user flow (university email-based access control intent)
+- Favorites/Wishlist
+- Ratings & reviews
+- Report listing (moderation flow)
+
+### Communication + Logistics
+- In-app messaging between buyer/seller
+- Appointment scheduling for meetups/pickup
+
+### Deployment + Ops
+- Dockerized app
+- Designed for multi-instance deployment behind HTTPS Load Balancer
+- `/server_info/` to surface server/environment details for debugging
+
+---
+
+## Routes / Pages
+
+- `/` — Home feed (listings + search/filters)
+- `/signup/` — Register
+- `/login/` — Login
+- `/logout/` — Logout
+- `/about/` — About
+- `/profile/` — Profile + listings + wishlist
+- `/item/<id>/` — Item detail (view/chat/appointment)
+- `/upload/` — Create listing
+- `/messages/` — Inbox/chat
+- `/appointments/` — Manage appointments
+- `/report/<id>/` — Report listing
+- `/server_info/` — Server metadata (diagnostics)
+
+---
+
+## Local Setup (Docker)
+
+### Prerequisites
+- Docker + Docker Compose (or Docker Desktop)
+
+### Run
+```bash
+# build
+docker build -t university-marketplace .
+
+# run (example)
+docker run -p 8000:8000 university-marketplace
